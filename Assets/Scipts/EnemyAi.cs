@@ -7,11 +7,16 @@ public class EnemyAi : MonoBehaviour, IDamage
     [SerializeField] NavMeshAgent agent;
     [SerializeField] Renderer model;
     [SerializeField] Transform shootPos;
+    [SerializeField] Transform MeleePos;
 
     [SerializeField] int hp;
 
     [SerializeField] GameObject bullet;
     [SerializeField] float shootRate;
+    [SerializeField] int attackDamage;
+    [SerializeField] float attackRange;
+    [SerializeField] float attackRate;
+
 
     Color colorOrig;
     float shootTimer;
@@ -35,6 +40,11 @@ public class EnemyAi : MonoBehaviour, IDamage
         {
             shoot();
         }
+
+        if (attackRange <= attackRate)
+        {
+            melee();
+        }
     }
 
     void shoot()
@@ -42,6 +52,11 @@ public class EnemyAi : MonoBehaviour, IDamage
         shootTimer = 0;
 
         Instantiate(bullet, shootPos.position, transform.rotation); // Spawn bullet at shootPos with enemy rotation
+    }
+
+    void melee()
+    {
+        attackDamage = 0; // Placeholder for melee attack logic
     }
     //can be used for all game objects that take damage
     public void takeDamage(int amount)
