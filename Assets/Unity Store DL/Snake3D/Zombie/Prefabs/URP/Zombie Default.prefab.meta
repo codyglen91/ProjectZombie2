@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 36f48579b0e8a2a4da5c9d345e96d2f1
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 329585
+  packageName: Realistic Zombie Character
+  packageVersion: 1.0
+  assetPath: Assets/Snake3D/Zombie/Prefabs/URP/Zombie Default.prefab
+  uploadId: 782603

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 027492c6496d36d48aae7a5d1ef18407
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 329585
+  packageName: Realistic Zombie Character
+  packageVersion: 1.0
+  assetPath: Assets/Snake3D/Zombie/Materials/URP/M_teeth.mat
+  uploadId: 782603

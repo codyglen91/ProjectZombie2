@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8954d12ff568d714d9adf6d9857a785f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 329585
+  packageName: Realistic Zombie Character
+  packageVersion: 1.0
+  assetPath: Assets/Snake3D/Zombie/Materials/URP/Other/M_Plane.mat
+  uploadId: 782603

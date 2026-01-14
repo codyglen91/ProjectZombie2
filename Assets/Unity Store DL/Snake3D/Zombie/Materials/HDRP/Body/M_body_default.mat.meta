@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8100c8c3fc600874d931ec3cea5536f1
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 329585
+  packageName: Realistic Zombie Character
+  packageVersion: 1.0
+  assetPath: Assets/Snake3D/Zombie/Materials/HDRP/Body/M_body_default.mat
+  uploadId: 782603
