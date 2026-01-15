@@ -59,12 +59,7 @@ public class playerController : MonoBehaviour, IDamage
         moveDir = Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward;
         controller.Move(moveDir * speed * Time.deltaTime);
 
-        jump();
-        controller.Move(playerVelocity * Time.deltaTime);
-
-        
-
-        if (controller.isGrounded) 
+        if (controller.isGrounded)
         {
             jumpCount = 0;
             playerVelocity = Vector3.zero;
@@ -73,6 +68,13 @@ public class playerController : MonoBehaviour, IDamage
         {
             playerVelocity.y -= gravity * Time.deltaTime;
         }
+
+        jump();
+        controller.Move(playerVelocity * Time.deltaTime);
+
+        
+
+       
 
         if (Input.GetButton("Fire1") && shootTimer >= shootRate)
         {
