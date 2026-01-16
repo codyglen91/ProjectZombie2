@@ -44,7 +44,6 @@ GameObject:
   - component: {fileID: 7552862334365974169}
   - component: {fileID: 337466523295382240}
   - component: {fileID: 445579537593148005}
-  - component: {fileID: -2987834989243183312}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -170,28 +169,6 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &-2987834989243183312
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1627421211768585433}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a441b49180ea5cc46886a274c3f39dfb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAi
-  agent: {fileID: 445579537593148005}
-  model: {fileID: 7552862334365974169}
-  shootPos: {fileID: 7827321385522411384}
-  hp: 30
-  bullet: {fileID: 5067366014534119178, guid: e591c71c982f3734396299415646848a, type: 3}
-  shootRate: 1
-  meleePos: {fileID: 7273286111371117902}
-  attackRange: 1
-  attackRate: 1.5
-  attackDamage: 1
 --- !u!1 &6168605427650375891
 GameObject:
   m_ObjectHideFlags: 0
