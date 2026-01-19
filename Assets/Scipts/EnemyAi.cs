@@ -13,6 +13,7 @@ public class EnemyAi : MonoBehaviour, IDamage
     [SerializeField] GameObject bullet;
     [SerializeField] float shootRate;
 
+
     [SerializeField] Transform meleePos;
     [SerializeField] float attackRange;
     [SerializeField] float attackRate;
@@ -21,6 +22,8 @@ public class EnemyAi : MonoBehaviour, IDamage
     Color colorOrig;
     float shootTimer;
     float meleeTimer;
+
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,7 +37,9 @@ public class EnemyAi : MonoBehaviour, IDamage
     void Update()
     {
         shootTimer += Time.deltaTime;
+
         meleeTimer += Time.deltaTime;
+
 
         agent.SetDestination(gameManager.instance.player.transform.position); // Set the destination of the NavMeshAgent to the player's position
 
@@ -42,11 +47,13 @@ public class EnemyAi : MonoBehaviour, IDamage
         {
             shoot();
         }
+
         
         if (Vector3.Distance(transform.position, gameManager.instance.player.transform.position) <= attackRange && meleeTimer >= attackRate)
         {
             melee();
         }
+
     }
 
     void shoot()
