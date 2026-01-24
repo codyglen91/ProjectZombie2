@@ -56,7 +56,7 @@ public class damage : MonoBehaviour
             StartCoroutine(damageOther(damage)); // Start the damage over time coroutine
         }
         
-    }
+    } 
 
     IEnumerator damageOther (IDamage d) // Coroutine to deal damage over time
     {
