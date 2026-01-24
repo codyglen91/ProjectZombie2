@@ -20,7 +20,7 @@ public class damage : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if(type == damageType.moving)
+        if (type == damageType.moving)
         {
             rb.linearVelocity = transform.forward * speed; // Set the velocity of the Rigidbody to move forward at the specified speed
             Destroy(gameObject, destroyTime); // Destroy the game object after the specified time
@@ -30,18 +30,18 @@ public class damage : MonoBehaviour
     // Update is called once per frame
     private void OnTriggerEnter(Collider other)
     {
-       // if(other.isTrigger) return; // Ignore trigger colliders
+        // if(other.isTrigger) return; // Ignore trigger colliders
 
         IDamage d = other.GetComponentInParent<IDamage>(); // Try to get the IDamage component from the other object
         if (d != null)
         {
             d.takeDamage(damageAmount);
-            if(d != null && type != damageType.DOT) // If the other object has an IDamage component and the damage type is not DOT
+            if (d != null && type != damageType.DOT) // If the other object has an IDamage component and the damage type is not DOT
             {
                 d.takeDamage(damageAmount);
             }
-            if(type == damageType.moving)
-            Destroy(gameObject); // Destroy the damage object after dealing damage
+            if (type == damageType.moving)
+                Destroy(gameObject); // Destroy the damage object after dealing damage
 
         }
     }
@@ -55,10 +55,10 @@ public class damage : MonoBehaviour
         {
             StartCoroutine(damageOther(damage)); // Start the damage over time coroutine
         }
-        
-    } 
 
-    IEnumerator damageOther (IDamage d) // Coroutine to deal damage over time
+    }
+
+    IEnumerator damageOther(IDamage d) // Coroutine to deal damage over time
     {
         isDamaging = true; // Set the isDamaging flag to true
         d.takeDamage(damageAmount); // Deal damage to the other object

@@ -15,13 +15,15 @@ public class EnemymeleeAI : MonoBehaviour, IDamage
     [SerializeField] Renderer model;
     [SerializeField] float meleeDamage;
 
+    [SerializeField] GameObject dropItem;
+
     [SerializeField] int hp;
 
     [SerializeField] Animator animator;
 
     Color colorOrig;
 
-    
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -60,11 +62,6 @@ public class EnemymeleeAI : MonoBehaviour, IDamage
         agent.SetDestination(transform.position);
     }
 
-    public int GetV(int amount)
-    {
-        return hp -= amount;
-    }
-
     //can be used for all game objects that take damage
     public void takeDamage(int amount)
     {
@@ -72,6 +69,10 @@ public class EnemymeleeAI : MonoBehaviour, IDamage
         if (hp <= 0)
         {
             gameManager.instance.updateGameGoal(-1);
+            // Can instantiate a scriptable game object for dropping item after death
+            if (dropItem != null)
+                Instantiate(dropItem, transform.position, transform.rotation);
+
             Destroy(gameObject);
         }
         else
