@@ -1,100 +1,65 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.AI;
-using Unity.VisualScripting;
 
-public class EnemyMeleeAi : MonoBehaviour, IDamage
+
+public class EnemymeleeAI : MonoBehaviour, IDamage
 {
+    GameObject player;
     [SerializeField] NavMeshAgent agent;
+    [SerializeField] LayerMask groundLayer, playerLayer;
+
+    [SerializeField] float sightRange, attackRange;
+    [SerializeField] bool playerInsight, playerInAttackRange;
+
     [SerializeField] Renderer model;
-    [SerializeField] Animator animator;
+    [SerializeField] float meleeDamage;
 
-    [Header("Melee")] 
-    [SerializeField] Transform meleePos;
-    [SerializeField] float attackRange;
-    [SerializeField] float attackRate;
-    [SerializeField] int attackDamage;
-    [SerializeField] float hitRadius = 1.0f;
+    [SerializeField] GameObject dropItem;
 
-    [Header("Stats")]
     [SerializeField] int hp;
 
+    [SerializeField] Animator animator;
+
     Color colorOrig;
-    float meleeTimer;
-    bool isAttacking;
+
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (model == null)
+            model = GetComponentInChildren<Renderer>();
+        agent = GetComponent<NavMeshAgent>();
         colorOrig = model.material.color;
-
-        if (animator == null)
-            animator = GetComponent<Animator>();
+        player = GameObject.Find("Player");
 
         gameManager.instance.updateGameGoal(1);
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
+        playerInsight = Physics.CheckSphere(transform.position, sightRange, playerLayer);
+        playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, playerLayer);
+
+        if (agent == null) agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        if (player == null) player = GameObject.FindGameObjectWithTag("Player");
+        if (agent == null || player == null) return;
+
+        agent.SetDestination(player.transform.position);
+
+        if (playerInsight && playerInAttackRange)
         {
-            Debug.Log("TEST KEY PRESSED -> Calling DealMeleeDamage()");
-            DealMeleeDamage();
-        }
-        meleeTimer += Time.deltaTime;
-
-        agent.SetDestination(gameManager.instance.player.transform.position); // Set the destination of the NavMeshAgent to the player's position
-
-        if (isAttacking)
-            return;
-
-        float dist = Vector3.Distance(transform.position, gameManager.instance.player.transform.position);
-
-        if (dist <= attackRange && meleeTimer >= attackRate)
-        {
-            Attack();
+            meleeAttack();
         }
     }
 
-    void Attack()
+    void meleeAttack()
     {
-        meleeTimer = 0f;
-        
-        isAttacking = true;
-        animator.SetTrigger("MeleeAttack");
-        DealMeleeDamage();
-    }
-public void DealMeleeDamage()
-    {
-        float hitRadius = 2.0f;
-        Collider[] hits = Physics.OverlapSphere(meleePos.position, hitRadius);
-        Debug.Log("DealMeleeDamage connected!" + hits.Length);
-
-        
-
-        for (int i = 0; i < hits.Length; i++)
-        {
-            //if (hits[i].gameObject == gameObject) continue;
-            if (hits[i].CompareTag("Player")) continue;
-
-            Debug.Log("Hit: " + hits[i].name);
-
-            IDamage damage = hits[i].GetComponentInParent<IDamage>();
-            if (damage != null)
-            {
-                Debug.Log("Apply damage to: " + hits[i].name + " for " + attackDamage);
-
-                damage.takeDamage(attackDamage);
-                return;
-            }
-        }
-        Debug.Log("No IDamage found in Hit Collider");
-    }
-
-    public void EndAttack()
-    {
-        isAttacking = false;
+        animator.SetTrigger("Attack");
+        agent.SetDestination(transform.position);
     }
 
     //can be used for all game objects that take damage
@@ -104,6 +69,10 @@ public void DealMeleeDamage()
         if (hp <= 0)
         {
             gameManager.instance.updateGameGoal(-1);
+            // Can instantiate a scriptable game object for dropping item after death
+            if (dropItem != null)
+                Instantiate(dropItem, transform.position, transform.rotation);
+
             Destroy(gameObject);
         }
         else
