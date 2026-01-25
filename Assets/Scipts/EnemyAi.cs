@@ -1,22 +1,32 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class EnemyAi : MonoBehaviour, IDamage
 {
     [SerializeField] NavMeshAgent agent;
     [SerializeField] Renderer model;
     [SerializeField] Transform shootPos;
+    [SerializeField] Transform headPos;
 
-    [SerializeField] GameObject dropItem;
+    [SerializeField] GameObject dropObject;
+    [SerializeField] float offsetY;
 
     [SerializeField] int hp;
+    [SerializeField] int faceTargetSpeed;
+    [SerializeField] int FOV;
 
     [SerializeField] GameObject bullet;
     [SerializeField] float shootRate;
 
     Color colorOrig;
     float shootTimer;
+    float angleToPlayer;
+
+    Vector3 playerDir;
+
+    bool playerInTrigger;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,12 +41,56 @@ public class EnemyAi : MonoBehaviour, IDamage
     {
         shootTimer += Time.deltaTime;
 
-        agent.SetDestination(gameManager.instance.player.transform.position); // Set the destination of the NavMeshAgent to the player's position
-
-        if (shootTimer >= shootRate)
+        if(playerInTrigger && canSeePlayer())
         {
-            shoot();
+
         }
+    }
+
+    bool canSeePlayer()
+    {
+        playerDir = (gameManager.instance.player.transform.position - headPos.position);
+        angleToPlayer = Vector3.Angle(playerDir, transform.forward);
+        Debug.DrawRay(headPos.position, playerDir);
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(headPos.position, playerDir, out hit))
+        {
+            if (angleToPlayer <= FOV / 2 && hit.collider.CompareTag("Player"))
+            {
+                agent.SetDestination(gameManager.instance.player.transform.position); // Move towards player
+
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    faceTarget(); // Can see player
+                }
+                if (shootTimer >= shootRate)
+                {
+                    shoot();
+                }
+                return true;
+            }
+        }
+        return false; // Cannot see player
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+            playerInTrigger = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+            playerInTrigger = false;
+    }
+
+    void faceTarget()
+    {
+        Quaternion rot = Quaternion.LookRotation(new Vector3(playerDir.x, transform.position.y, playerDir.z));
+        transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * faceTargetSpeed);
     }
 
     void shoot()
@@ -53,8 +107,7 @@ public class EnemyAi : MonoBehaviour, IDamage
         {
             gameManager.instance.updateGameGoal(-1);
             // Can instantiate a scriptable game object
-            if (dropItem != null)
-                Instantiate(dropItem, transform.position, transform.rotation);
+            dropItem();
 
             Destroy(gameObject);
         }
@@ -70,5 +123,10 @@ public class EnemyAi : MonoBehaviour, IDamage
         yield return new WaitForSeconds(0.1f); // wait for 0.1 seconds
         model.material.color = colorOrig; // change color back to original
 
+    }
+    void dropItem()
+    {
+        if (dropObject != null)
+            Instantiate(dropObject, new Vector3(transform.position.x, transform.position.y + offsetY, transform.position.z), transform.rotation);
     }
 }

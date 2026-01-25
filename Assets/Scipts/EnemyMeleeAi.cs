@@ -1,5 +1,6 @@
-using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.AI;
 
 
@@ -8,6 +9,14 @@ public class EnemymeleeAI : MonoBehaviour, IDamage
     GameObject player;
     [SerializeField] NavMeshAgent agent;
     [SerializeField] LayerMask groundLayer, playerLayer;
+    [SerializeField] Transform headPos;
+
+    [SerializeField] GameObject dropObject;
+    [SerializeField] float offsetY;
+
+    [SerializeField] int hp;
+    [SerializeField] int faceTargetSpeed;
+    [SerializeField] int FOV;
 
     [SerializeField] float sightRange, attackRange;
     [SerializeField] bool playerInsight, playerInAttackRange;
@@ -15,12 +24,13 @@ public class EnemymeleeAI : MonoBehaviour, IDamage
     [SerializeField] Renderer model;
     [SerializeField] float meleeDamage;
 
-    [SerializeField] GameObject dropItem;
-
-    [SerializeField] int hp;
-
     [SerializeField] Animator animator;
 
+    float angleToPlayer;
+
+    Vector3 playerDir;
+
+    bool playerInTrigger;
     Color colorOrig;
 
 
@@ -28,32 +38,65 @@ public class EnemymeleeAI : MonoBehaviour, IDamage
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (model == null)
-            model = GetComponentInChildren<Renderer>();
-        agent = GetComponent<NavMeshAgent>();
         colorOrig = model.material.color;
-        player = GameObject.Find("Player");
 
         gameManager.instance.updateGameGoal(1);
-        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        playerInsight = Physics.CheckSphere(transform.position, sightRange, playerLayer);
-        playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, playerLayer);
+        //shootTimer += Time.deltaTime;
 
-        if (agent == null) agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        if (player == null) player = GameObject.FindGameObjectWithTag("Player");
-        if (agent == null || player == null) return;
 
-        agent.SetDestination(player.transform.position);
-
-        if (playerInsight && playerInAttackRange)
+        if (playerInTrigger && canSeePlayer())
         {
-            meleeAttack();
+
         }
+    }
+
+    bool canSeePlayer()
+    {
+        playerDir = (gameManager.instance.player.transform.position - headPos.position);
+        angleToPlayer = Vector3.Angle(playerDir, transform.forward);
+        Debug.DrawRay(headPos.position, playerDir);
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(headPos.position, playerDir, out hit))
+        {
+            if (angleToPlayer <= FOV / 2 && hit.collider.CompareTag("Player"))
+            {
+                agent.SetDestination(gameManager.instance.player.transform.position); // Move towards player
+
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    faceTarget(); // Can see player
+                }
+
+                meleeAttack();
+                return true;
+            }
+        }
+        return false; // Cannot see player
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+            playerInTrigger = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+            playerInTrigger = false;
+    }
+
+    void faceTarget()
+    {
+        Quaternion rot = Quaternion.LookRotation(new Vector3(playerDir.x, transform.position.y, playerDir.z));
+        transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * faceTargetSpeed);
     }
 
     void meleeAttack()
@@ -69,9 +112,8 @@ public class EnemymeleeAI : MonoBehaviour, IDamage
         if (hp <= 0)
         {
             gameManager.instance.updateGameGoal(-1);
-            // Can instantiate a scriptable game object for dropping item after death
-            if (dropItem != null)
-                Instantiate(dropItem, transform.position, transform.rotation);
+            // Can instantiate a scriptable game object
+            dropItem();
 
             Destroy(gameObject);
         }
@@ -87,5 +129,10 @@ public class EnemymeleeAI : MonoBehaviour, IDamage
         yield return new WaitForSeconds(0.1f); // wait for 0.1 seconds
         model.material.color = colorOrig; // change color back to original
 
+    }
+    void dropItem()
+    {
+        if (dropObject != null)
+            Instantiate(dropObject, new Vector3(transform.position.x, transform.position.y + offsetY, transform.position.z), transform.rotation);
     }
 }

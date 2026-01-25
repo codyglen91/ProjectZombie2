@@ -46,6 +46,7 @@ public class playerController : MonoBehaviour, IDamage, IPickup
     {
         remaningShots = magazineSize;
         HPOriginal = hp;
+        updatePlayerUI();
 
     }
 
@@ -144,6 +145,8 @@ public class playerController : MonoBehaviour, IDamage, IPickup
     {
         Debug.Log(amount + " damage taken!");
         hp -= amount;
+        updatePlayerUI(); // Always update UI on damage taken
+        StartCoroutine(flashRed());
 
         //Check if the player is dead
         if (hp <= 0)
