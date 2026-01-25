@@ -4,6 +4,7 @@ using UnityEngine;
 //Updated/Fix Enemies using Zombie avatar with Spwan VFX.
 //Handles enemy spawning at random spawn points with a maximum limit and delay.
 //Spawns visual effects (VFX) when an enemy is spawned.
+///Ensure to set the enemyPrefab and spawnPoints in the inspector.
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Spawn VFX")]
