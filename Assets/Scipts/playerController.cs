@@ -22,6 +22,7 @@ public class playerController : MonoBehaviour, IDamage
     [SerializeField] int shootDamage;
     [SerializeField] int shootDist;
     [SerializeField] float shootRate;
+    [SerializeField] int magazineSize;
 
     int jumpCount;
     int HPOriginal;
@@ -123,6 +124,15 @@ public class playerController : MonoBehaviour, IDamage
         if(hp <=0)
         {
             gameManager.instance.youLose();
+        }
+    }
+
+    public void heal(int amount)
+    {
+               hp += amount;
+        if(hp > HPOriginal)
+        {
+            hp = HPOriginal;
         }
     }
 }// Normal is the side of a surface that has the side you can see, like the front of a wall
