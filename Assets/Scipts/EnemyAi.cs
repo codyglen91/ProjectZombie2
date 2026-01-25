@@ -16,17 +16,23 @@ public class EnemyAi : MonoBehaviour, IDamage
     [SerializeField] int hp;
     [SerializeField] int faceTargetSpeed;
     [SerializeField] int FOV;
+    [SerializeField] int roamDist;
+    [SerializeField] int roamPauseTime;
 
     [SerializeField] GameObject bullet;
     [SerializeField] float shootRate;
 
     Color colorOrig;
+
     float shootTimer;
+    float roamTimer;
     float angleToPlayer;
+    float stoppingDistOrig;
 
     Vector3 playerDir;
+    Vector3 startingPos;
 
-    bool playerInTrigger;
+    bool playerInRange;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,16 +40,25 @@ public class EnemyAi : MonoBehaviour, IDamage
         colorOrig = model.sharedMaterial.color;
 
         gameManager.instance.updateGameGoal(1);
+        startingPos = transform.position;
+        stoppingDistOrig = agent.stoppingDistance;
     }
 
     // Update is called once per frame
     void Update()
     {
         shootTimer += Time.deltaTime;
+        if (agent.remainingDistance < 0.01f)
+            roamTimer += Time.deltaTime;
 
-        if(playerInTrigger && canSeePlayer())
+
+        if (playerInRange && canSeePlayer())
         {
-
+            checkRoam();
+        }
+        else if (!playerInRange)
+        {
+            checkRoam();
         }
     }
 
@@ -75,16 +90,40 @@ public class EnemyAi : MonoBehaviour, IDamage
         return false; // Cannot see player
     }
 
+    void checkRoam()
+    {
+        if (agent.remainingDistance < 0.01f && roamTimer >= roamPauseTime)
+        {
+            roam();
+        }
+    }
+
+    void roam()
+    {
+        roamTimer = 0;
+        agent.stoppingDistance = 0;
+
+        Vector3 ranPos = Random.insideUnitSphere * roamDist;
+        ranPos += startingPos;
+
+        NavMeshHit hit;
+        NavMesh.SamplePosition(ranPos, out hit, roamDist, 1);
+        agent.SetDestination(hit.position);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
-            playerInTrigger = true;
+            playerInRange = true;
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
-            playerInTrigger = false;
+        {
+            playerInRange = false;
+            agent.stoppingDistance = 0;
+        }
     }
 
     void faceTarget()

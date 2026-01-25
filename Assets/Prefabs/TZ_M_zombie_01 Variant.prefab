@@ -121,13 +121,20 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
+  headPos: {fileID: 976366026986392914, guid: 924ead2cd125deb4cbda9fe499921b0a, type: 3}
+  dropObject: {fileID: 0}
+  offsetY: 0
+  hp: 5
+  faceTargetSpeed: 5
+  FOV: 90
+  roamDist: 25
+  roamPauseTime: 3
   sightRange: 100
   attackRange: 3
   playerInsight: 1
   playerInAttackRange: 1
   model: {fileID: 13700094, guid: e140a37e6a1ddff4ea1fc152ef27c587, type: 3}
   meleeDamage: 1
-  hp: 5
   animator: {fileID: 3453540224802848720}
 --- !u!136 &4585171814709812241
 CapsuleCollider:

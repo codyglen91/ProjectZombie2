@@ -120,7 +120,7 @@ public class playerController : MonoBehaviour, IDamage, IPickup
     {
         shootTimer = 0;
 
-        gunList[gunListPos].ammoCurrent -= 1; //Decrease current ammo of the gun being used if 0 can't shoot
+        gunList[gunListPos].ammoCurrent--; //Decrease current ammo of the gun being used if 0 can't shoot
 
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDist, ~ignoreLayer))
