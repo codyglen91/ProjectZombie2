@@ -26,13 +26,17 @@ public class EnemymeleeAI : MonoBehaviour, IDamage
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+ 
         if (model == null)
-            model = GetComponentInChildren<Renderer>();
-        agent = GetComponent<NavMeshAgent>();
-        colorOrig = model.material.color;
+        {
+            model = GetComponentInChildren<Renderer>(true);
+        } else
+        {
+            colorOrig = model.material.color;
+        }
+            agent = GetComponent<NavMeshAgent>();
         player = GameObject.Find("Player");
 
-        gameManager.instance.updateGameGoal(1);
         animator = GetComponent<Animator>();
     }
 
@@ -58,6 +62,11 @@ public class EnemymeleeAI : MonoBehaviour, IDamage
     {
         animator.SetTrigger("Attack");
         agent.SetDestination(transform.position);
+    }
+
+    public int GetV(int amount)
+    {
+        return hp -= amount;
     }
 
     //can be used for all game objects that take damage

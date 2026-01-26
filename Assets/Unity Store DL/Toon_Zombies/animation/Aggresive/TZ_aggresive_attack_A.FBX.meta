@@ -226,11 +226,11 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 0.31034485
-        functionName: DealMeleeDamage
+        functionName: Attack
         data: 
-        objectReferenceParameter: {instanceID: 0}
+        objectReferenceParameter: {fileID: 11500000, guid: 2e51b25651d2f9f4da7fce8df2261f0d, type: 3}
         floatParameter: 0
-        intParameter: 0
+        intParameter: 1
         messageOptions: 0
       transformMask:
       - path: 

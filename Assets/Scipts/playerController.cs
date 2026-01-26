@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
+using System.Collections;
 using System.Collections.Generic;
 
 public class playerController : MonoBehaviour, IDamage, IPickup
@@ -45,6 +47,7 @@ public class playerController : MonoBehaviour, IDamage, IPickup
     {
      remaningShots = magazineSize;
      HPOriginal = hp;
+        updateplayerUI();
      
     }
 
@@ -141,6 +144,8 @@ public class playerController : MonoBehaviour, IDamage, IPickup
     {
         Debug.Log(amount + " damage taken!");
         hp -= amount;
+        updateplayerUI();
+        StartCoroutine(flashRed());
 
         //Check if the player is dead
         if (hp <= 0)
@@ -148,8 +153,8 @@ public class playerController : MonoBehaviour, IDamage, IPickup
             gameManager.instance.youLose();
         }
     }
-   
-    public void updatePlayerUI()
+
+    public void updateplayerUI()
     {
         gameManager.instance.playerHPBar.fillAmount = (float)hp / HPOriginal;
     }
@@ -157,7 +162,7 @@ public class playerController : MonoBehaviour, IDamage, IPickup
     IEnumerator flashRed()
     {
         gameManager.instance.playerDamageScreen.SetActive(true);
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.25f);
         gameManager.instance.playerDamageScreen.SetActive(false);
     }
 

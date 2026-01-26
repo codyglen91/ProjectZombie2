@@ -30,12 +30,11 @@ public class damage : MonoBehaviour
     // Update is called once per frame
     private void OnTriggerEnter(Collider other)
     {
-       // if(other.isTrigger) return; // Ignore trigger colliders
+        // if(other.isTrigger) return; // Ignore trigger colliders
 
         IDamage d = other.GetComponentInParent<IDamage>(); // Try to get the IDamage component from the other object
         if (d != null)
         {
-            d.takeDamage(damageAmount);
             if(d != null && type != damageType.DOT) // If the other object has an IDamage component and the damage type is not DOT
             {
                 d.takeDamage(damageAmount);

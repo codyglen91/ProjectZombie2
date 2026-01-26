@@ -44,12 +44,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6066196912605754623}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b85f13aae4e9e64c803c3b9d9c814fe, type: 3}
+  m_Script: {fileID: 11500000, guid: 2860f7e84532c474eb7b70da1bc3c98e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::damage
   type: 0
   rb: {fileID: 6658659476122851177}
-  damageAmount: 1
+  damageAmount: 10
   damageRate: 0
   speed: 25
   destroyTime: 3
