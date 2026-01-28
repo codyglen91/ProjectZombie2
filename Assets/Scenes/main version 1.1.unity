@@ -931,6 +931,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100180809}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &108010040 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8532310633147547840, guid: 379107248febd1941bfd0a2189e4a582, type: 3}
+  m_PrefabInstance: {fileID: 4651986953214563749}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &112299150
 GameObject:
   m_ObjectHideFlags: 0
@@ -14567,11 +14572,11 @@ PrefabInstance:
     - target: {fileID: 8951945654901835607, guid: 038d688dcee7c7f42a8839767b7a4f45, type: 3}
       propertyPath: 'spawners.Array.data[0]'
       value: 
-      objectReference: {fileID: 1822162387}
+      objectReference: {fileID: 0}
     - target: {fileID: 8951945654901835607, guid: 038d688dcee7c7f42a8839767b7a4f45, type: 3}
       propertyPath: 'spawners.Array.data[1]'
       value: 
-      objectReference: {fileID: 1822162387}
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3466482421768710552, guid: 038d688dcee7c7f42a8839767b7a4f45, type: 3}
     m_RemovedGameObjects: []
@@ -16598,17 +16603,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1817757950}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1822162387 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5387108767539600624, guid: 428aebc699fa07048b08a5dd37c07337, type: 3}
-  m_PrefabInstance: {fileID: 853846591258273578}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39ed89710f9bec043a77aeed52485d6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::spawner
 --- !u!1 &1826003899
 GameObject:
   m_ObjectHideFlags: 0
@@ -18064,7 +18058,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: c6499c152d273d8478e243c2ca3a8125, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 67a4c40366973684a9b01b1dab34a0ea, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &1963003583
 Transform:
@@ -19857,6 +19851,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: KayleePlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 7428248654605246986, guid: 379107248febd1941bfd0a2189e4a582, type: 3}
+      propertyPath: gunModel
+      value: 
+      objectReference: {fileID: 108010040}
     - target: {fileID: 7999564861409116067, guid: 379107248febd1941bfd0a2189e4a582, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.0272813
