@@ -19,7 +19,7 @@ public class EnemymeleeAI : MonoBehaviour, IDamage
 
     [SerializeField] Animator animator;
 
-    Color colorOrig;
+    Color colorOrig; 
 
     
 

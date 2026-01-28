@@ -63,10 +63,10 @@ public class AmmoPickUP : MonoBehaviour
         if (!other.CompareTag("Player"))
             return;
 
-        PlayerController pc = other.GetComponent<PlayerController>();
+        playerController pc = other.GetComponent<playerController>();
 
         if (pc == null)
-            pc = other.GetComponentInParent<PlayerController>();
+            pc = other.GetComponentInParent<playerController>();
 
         // Add ammo to the player
         if (pc != null)

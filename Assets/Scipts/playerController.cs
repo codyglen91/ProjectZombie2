@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
-using System.Collections;
 using System.Collections.Generic;
 
 public class playerController : MonoBehaviour, IDamage, IPickup
@@ -35,7 +34,7 @@ public class playerController : MonoBehaviour, IDamage, IPickup
     int gunListPos;
 
     float shootTimer;
-    int remaningShots;
+    int remainingShots;
 
     Vector3 moveDir;
     Vector3 playerVelocity;
@@ -45,7 +44,7 @@ public class playerController : MonoBehaviour, IDamage, IPickup
    
     void Start()
     {
-     remaningShots = magazineSize;
+     remainingShots = magazineSize;
      HPOriginal = hp;
         updateplayerUI();
      
@@ -85,7 +84,7 @@ public class playerController : MonoBehaviour, IDamage, IPickup
         if (Input.GetButton("Fire1") && shootTimer >= shootRate)
         {
             Shoot();
-            remaningShots -= 1;
+            remainingShots -= 1;
         }
 
         if(Input.GetButton("Fire2"))
@@ -127,7 +126,7 @@ public class playerController : MonoBehaviour, IDamage, IPickup
             Debug.Log(hit.collider.name);
             IDamage dmg = hit.collider.GetComponent<IDamage>();
 
-            if(remaningShots <= 0)
+            if(remainingShots <= 0)
             {
                 return;
             }
@@ -154,6 +153,17 @@ public class playerController : MonoBehaviour, IDamage, IPickup
         }
     }
 
+    public void Heal(int amount)
+    {
+        hp += amount;
+        if (hp > HPOriginal) hp = HPOriginal;
+        Debug.Log($"[Player] Healed {amount}. HP now {hp}");
+
+        updateplayerUI();
+    }
+
+
+
     public void updateplayerUI()
     {
         gameManager.instance.playerHPBar.fillAmount = (float)hp / HPOriginal;
@@ -169,7 +179,7 @@ public class playerController : MonoBehaviour, IDamage, IPickup
     public void reload()
     {
     
-            remaningShots = magazineSize;
+            remainingShots = magazineSize;
         
     }
     // Found in IPickup to make Player shoot stats be gun stats
@@ -207,6 +217,15 @@ public class playerController : MonoBehaviour, IDamage, IPickup
             changeGun();
         }
         
+    }
+
+    public void AddAmmo(int amount)
+    {
+        remainingShots += amount;
+
+        if (remainingShots > magazineSize) remainingShots = magazineSize;
+
+        Debug.Log("Player Picked Up Ammo {amount}. Ammo now {remainingShots}/{magazoneSize}");
     }
 }
 // Normal is the side of a surface that has the side you can see, like the front of a wall
