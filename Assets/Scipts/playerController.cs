@@ -1,7 +1,10 @@
+using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
+using System.Collections;
+using System.Collections.Generic;
 
-public class PlayerController : MonoBehaviour, IDamage
+public class playerController : MonoBehaviour, IDamage, IPickup
 {
     [Header("----- Component -----")]
     [SerializeField] CharacterController controller;
@@ -10,7 +13,7 @@ public class PlayerController : MonoBehaviour, IDamage
 
 
     [Header("----- Stats -----")]
-    [Range(10, 100)][SerializeField] int hp;
+    [Range(0,10)][SerializeField] int hp;
     [Range(1, 10)][SerializeField] int speed;
     [Range(2, 5)][SerializeField] int sprintMod;
     [Range(8, 20)][SerializeField] int jumpSpeed;
@@ -20,79 +23,77 @@ public class PlayerController : MonoBehaviour, IDamage
     [Range(15, 40)][SerializeField] int gravity;
 
     [Header("----- Guns -----")]
+    [SerializeField] List<gunStats> gunList = new List<gunStats>();
+    [SerializeField] GameObject gunModel;
     [SerializeField] int shootDamage;
     [SerializeField] int shootDist;
     [SerializeField] float shootRate;
     [SerializeField] int magazineSize;
 
-    [Header("UI")]
-    [SerializeField] Image healthBar;
-
-
     int jumpCount;
     int HPOriginal;
+    int gunListPos;
 
     float shootTimer;
-    int remainingShots;
+    int remaningShots;
 
     Vector3 moveDir;
     Vector3 playerVelocity;
 
 
 
-
+   
     void Start()
     {
-        if (controller == null) controller = GetComponent<CharacterController>();
-        HPOriginal = hp;
-
-        remainingShots = magazineSize;
-        shootTimer = shootRate; // so you can shoot immediately
-
-        UpdateHealthBar();
-
-        Debug.Log($"[Player] Start. HP={hp}, Ammo={remainingShots}/{magazineSize}");
-
+     remaningShots = magazineSize;
+     HPOriginal = hp;
+        updateplayerUI();
+     
     }
 
-
+    
     void Update()
     {
         movement();
         sprint();
-
-        shootTimer += Time.deltaTime;
-
-        if (Input.GetButton("Fire1") && shootTimer >= shootRate)
-        {
-            Shoot();
-        }
-
-        if (Input.GetButtonDown("Fire2"))
-        {
-            reload();
-        }
     }
 
     void movement()
     {
-        moveDir = Input.GetAxis("Horizontal") * transform.right +
-                  Input.GetAxis("Vertical") * transform.forward;
+        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDist, Color.red);
 
+        shootTimer += Time.deltaTime; 
+
+        moveDir = Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward;
         controller.Move(moveDir * speed * Time.deltaTime);
 
         jump();
         controller.Move(playerVelocity * Time.deltaTime);
 
-        if (controller.isGrounded)
+        
+
+        if (controller.isGrounded) 
         {
             jumpCount = 0;
-            if (playerVelocity.y < 0) playerVelocity.y = 0;
+            playerVelocity = Vector3.zero;
         }
         else
         {
             playerVelocity.y -= gravity * Time.deltaTime;
         }
+
+        if (Input.GetButton("Fire1") && shootTimer >= shootRate)
+        {
+            Shoot();
+            remaningShots -= 1;
+        }
+
+        if(Input.GetButton("Fire2"))
+        {
+            reload();
+        }
+
+        selectGun();
     }
 
     void jump()
@@ -106,11 +107,11 @@ public class PlayerController : MonoBehaviour, IDamage
 
     void sprint()
     {
-        if (Input.GetButtonDown("Sprint"))
+        if(Input.GetButtonDown("Sprint"))
         {
             speed *= sprintMod;
         }
-        else if (Input.GetButtonUp("Sprint"))
+        else if(Input.GetButtonUp ("Sprint"))
         {
             speed /= sprintMod;
         }
@@ -118,99 +119,94 @@ public class PlayerController : MonoBehaviour, IDamage
 
     void Shoot()
     {
-
-        if (remainingShots <= 0)
-        {
-            Debug.Log("[Player] Click! Out of ammo.");
-            shootTimer = 0f;
-            return;
-        }
-
-        shootTimer = 0f;
-        remainingShots--;
-
-        Vector3 origin = Camera.main.transform.position;
-        Vector3 dir = Camera.main.transform.forward;
+        shootTimer = 0;
 
         RaycastHit hit;
-
-        int mask = ~ignoreLayer.value; // hit everything EXCEPT layers in ignoreLayer
-
-        Debug.DrawRay(origin, dir * shootDist, Color.red, 1f);
-
-        if (Physics.Raycast(origin, dir, out hit, shootDist, mask, QueryTriggerInteraction.Collide))
+        if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDist, ~ignoreLayer))
         {
+            Debug.Log(hit.collider.name);
             IDamage dmg = hit.collider.GetComponent<IDamage>();
-            if (dmg != null)
+
+            if(remaningShots <= 0)
             {
-                Debug.Log($"[Player] Hit {hit.collider.name} for {shootDamage}");
+                return;
+            }
+            else if(dmg != null)
+            {
                 dmg.takeDamage(shootDamage);
+             
             }
-            else
-            {
-                Debug.Log($"[Player] Hit {hit.collider.name} but it has no IDamage.");
-            }
-        }
-        else
-        {
-            Debug.Log("[Player] Shot missed.");
+
         }
     }
-
-    public void AddAmmo(int amount)
-    {
-        remainingShots += amount;
-
-        if (remainingShots > magazineSize) remainingShots = magazineSize;
-
-        Debug.Log("Player Picked Up Ammo {amount}. Ammo now {remainingShots}/{magazoneSize}");
-    }
-
 
     public void takeDamage(int amount)
     {
-        hp -= amount; // FIXED (was hp = amount)
-        hp = Mathf.Clamp(hp, 0, HPOriginal);
+        Debug.Log(amount + " damage taken!");
+        hp -= amount;
+        updateplayerUI();
+        StartCoroutine(flashRed());
 
-        UpdateHealthBar();
-
-        Debug.Log($"[Player] Took {amount} damage. HP now {hp}");
-
+        //Check if the player is dead
         if (hp <= 0)
         {
-            // you had gameManager.instance.youLose();
-            if (gameManager.instance != null)
-                gameManager.instance.youLose();
-            else
-                Debug.Log("[Player] Dead, but gameManager.instance is null.");
+            gameManager.instance.youLose();
         }
     }
 
-    public void Heal(int amount)
+    public void updateplayerUI()
     {
-        hp += amount;
-        if (hp > HPOriginal) hp = HPOriginal;
-        Debug.Log($"[Player] Healed {amount}. HP now {hp}");
+        gameManager.instance.playerHPBar.fillAmount = (float)hp / HPOriginal;
+    }
 
-        UpdateHealthBar();
+    IEnumerator flashRed()
+    {
+        gameManager.instance.playerDamageScreen.SetActive(true);
+        yield return new WaitForSeconds(0.25f);
+        gameManager.instance.playerDamageScreen.SetActive(false);
     }
 
     public void reload()
     {
-
-        remainingShots = magazineSize;
-        Debug.Log($"[Player] Reloaded. Ammo={remainingShots}/{magazineSize}");
+    
+            remaningShots = magazineSize;
+        
     }
-
-    void UpdateHealthBar()
+    // Found in IPickup to make Player shoot stats be gun stats
+    // That way his damage output follows what gun he has.
+    //Inventory system needs below here
+    public void getGunStats(gunStats gun)
     {
-        if (healthBar != null && HPOriginal > 0)
-        {
-            healthBar.fillAmount = (float)hp / HPOriginal;
-        }
+        gunList.Add(gun);
+        gunListPos = gunList.Count - 1;
+
+        changeGun(); //Change gun is the function for all of the stat changes and gun change
+
+    }
+    void changeGun()
+    {
+        shootDamage = gunList[gunListPos].shootDamage;
+        shootDist = gunList[gunListPos].shootDist;
+        shootRate = gunList[gunListPos].shootRate;
+        //for transitioning the gun model renderer and mesh so picked up gun is shown
+        // Always do this this way for ease.
+        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunList[gunListPos].gunModel.GetComponent<MeshRenderer>().sharedMaterial;
+        gunModel.GetComponent<MeshFilter>().sharedMesh = gunList[gunListPos].gunModel.GetComponent<MeshFilter>().sharedMesh;
     }
 
-
-
-
-}// Normal is the side of a surface that has the side you can see, like the front of a wall
+    void selectGun()
+    {
+        if (Input.GetAxis("Mouse ScrollWheel") > 0 && gunListPos < gunList.Count - 1)
+        {
+            gunListPos++; //scrolling up changes gun up
+            changeGun();
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0 && gunListPos > 0)
+        {
+            gunListPos--; //scrolling up changes gun up
+            changeGun();
+        }
+        
+    }
+}
+// Normal is the side of a surface that has the side you can see, like the front of a wall
