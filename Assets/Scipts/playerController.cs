@@ -1,15 +1,16 @@
 using UnityEngine;
-// Continue Lecture 2 at 3:34:40, this note is from 1/10/26
-// 1/10/26 Look for Player Collider, not currently taking damage
-// For top down games, just drag the camera to the Player in Unity Hierarchy
-public class playerController : MonoBehaviour, IDamage
+using UnityEngine.UI;
+
+public class PlayerController : MonoBehaviour, IDamage
 {
-    [Header("----- Component -----")]// creates sections in Player controller when attached to a GameObject
+    [Header("----- Component -----")]
     [SerializeField] CharacterController controller;
+    [SerializeField] Renderer model;
     [SerializeField] LayerMask ignoreLayer;
 
+
     [Header("----- Stats -----")]
-    [Range(1,10)][SerializeField] int hp;
+    [Range(10, 100)][SerializeField] int hp;
     [Range(1, 10)][SerializeField] int speed;
     [Range(2, 5)][SerializeField] int sprintMod;
     [Range(8, 20)][SerializeField] int jumpSpeed;
@@ -24,57 +25,73 @@ public class playerController : MonoBehaviour, IDamage
     [SerializeField] float shootRate;
     [SerializeField] int magazineSize;
 
+    [Header("UI")]
+    [SerializeField] Image healthBar;
+
+
     int jumpCount;
     int HPOriginal;
 
     float shootTimer;
+    int remainingShots;
 
     Vector3 moveDir;
     Vector3 playerVelocity;
 
 
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
-     HPOriginal = hp;
-     
+        if (controller == null) controller = GetComponent<CharacterController>();
+        HPOriginal = hp;
+
+        remainingShots = magazineSize;
+        shootTimer = shootRate; // so you can shoot immediately
+
+        UpdateHealthBar();
+
+        Debug.Log($"[Player] Start. HP={hp}, Ammo={remainingShots}/{magazineSize}");
+
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         movement();
         sprint();
-    }
 
-    void movement()
-    {
-        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDist, Color.red);
-
-        shootTimer += Time.deltaTime; //shoot timer counts up
-
-        moveDir = Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward;
-        controller.Move(moveDir * speed * Time.deltaTime);
-
-        jump();// Call jump first
-        controller.Move(playerVelocity * Time.deltaTime); // Only jump need gravity
-
-        
-
-        if (controller.isGrounded) // controller colliders are on top, bottom, and sides
-        {
-            jumpCount = 0;
-            playerVelocity = Vector3.zero;
-        }
-        else
-        {
-            playerVelocity.y -= gravity * Time.deltaTime;// Add gravity so he comes down
-        }
+        shootTimer += Time.deltaTime;
 
         if (Input.GetButton("Fire1") && shootTimer >= shootRate)
         {
             Shoot();
+        }
+
+        if (Input.GetButtonDown("Fire2"))
+        {
+            reload();
+        }
+    }
+
+    void movement()
+    {
+        moveDir = Input.GetAxis("Horizontal") * transform.right +
+                  Input.GetAxis("Vertical") * transform.forward;
+
+        controller.Move(moveDir * speed * Time.deltaTime);
+
+        jump();
+        controller.Move(playerVelocity * Time.deltaTime);
+
+        if (controller.isGrounded)
+        {
+            jumpCount = 0;
+            if (playerVelocity.y < 0) playerVelocity.y = 0;
+        }
+        else
+        {
+            playerVelocity.y -= gravity * Time.deltaTime;
         }
     }
 
@@ -89,11 +106,11 @@ public class playerController : MonoBehaviour, IDamage
 
     void sprint()
     {
-        if(Input.GetButtonDown("Sprint"))
+        if (Input.GetButtonDown("Sprint"))
         {
             speed *= sprintMod;
         }
-        else if(Input.GetButtonUp ("Sprint"))
+        else if (Input.GetButtonUp("Sprint"))
         {
             speed /= sprintMod;
         }
@@ -101,38 +118,99 @@ public class playerController : MonoBehaviour, IDamage
 
     void Shoot()
     {
-        shootTimer = 0;
+
+        if (remainingShots <= 0)
+        {
+            Debug.Log("[Player] Click! Out of ammo.");
+            shootTimer = 0f;
+            return;
+        }
+
+        shootTimer = 0f;
+        remainingShots--;
+
+        Vector3 origin = Camera.main.transform.position;
+        Vector3 dir = Camera.main.transform.forward;
 
         RaycastHit hit;
-        if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDist, ~ignoreLayer))
+
+        int mask = ~ignoreLayer.value; // hit everything EXCEPT layers in ignoreLayer
+
+        Debug.DrawRay(origin, dir * shootDist, Color.red, 1f);
+
+        if (Physics.Raycast(origin, dir, out hit, shootDist, mask, QueryTriggerInteraction.Collide))
         {
-            Debug.Log(hit.collider.name);
             IDamage dmg = hit.collider.GetComponent<IDamage>();
-            if(dmg != null)
+            if (dmg != null)
             {
+                Debug.Log($"[Player] Hit {hit.collider.name} for {shootDamage}");
                 dmg.takeDamage(shootDamage);
             }
-
+            else
+            {
+                Debug.Log($"[Player] Hit {hit.collider.name} but it has no IDamage.");
+            }
+        }
+        else
+        {
+            Debug.Log("[Player] Shot missed.");
         }
     }
+
+    public void AddAmmo(int amount)
+    {
+        remainingShots += amount;
+
+        if (remainingShots > magazineSize) remainingShots = magazineSize;
+
+        Debug.Log("Player Picked Up Ammo {amount}. Ammo now {remainingShots}/{magazoneSize}");
+    }
+
 
     public void takeDamage(int amount)
     {
-        hp -= amount;
+        hp -= amount; // FIXED (was hp = amount)
+        hp = Mathf.Clamp(hp, 0, HPOriginal);
 
-        //Check if the player is dead
-        if(hp <=0)
+        UpdateHealthBar();
+
+        Debug.Log($"[Player] Took {amount} damage. HP now {hp}");
+
+        if (hp <= 0)
         {
-            gameManager.instance.youLose();
+            // you had gameManager.instance.youLose();
+            if (gameManager.instance != null)
+                gameManager.instance.youLose();
+            else
+                Debug.Log("[Player] Dead, but gameManager.instance is null.");
         }
     }
 
-    public void heal(int amount)
+    public void Heal(int amount)
     {
-               hp += amount;
-        if(hp > HPOriginal)
+        hp += amount;
+        if (hp > HPOriginal) hp = HPOriginal;
+        Debug.Log($"[Player] Healed {amount}. HP now {hp}");
+
+        UpdateHealthBar();
+    }
+
+    public void reload()
+    {
+
+        remainingShots = magazineSize;
+        Debug.Log($"[Player] Reloaded. Ammo={remainingShots}/{magazineSize}");
+    }
+
+    void UpdateHealthBar()
+    {
+        if (healthBar != null && HPOriginal > 0)
         {
-            hp = HPOriginal;
+            healthBar.fillAmount = (float)hp / HPOriginal;
         }
     }
+
+
+
+
 }// Normal is the side of a surface that has the side you can see, like the front of a wall

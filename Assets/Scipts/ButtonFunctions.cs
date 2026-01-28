@@ -5,12 +5,12 @@ public class ButtonFunctions : MonoBehaviour
 {
    public void resume()
     {
-        gameManager.instance.stateUnpause();
+        gameManager.instance.StateUnpaused();
     }
     public void restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        gameManager.instance.stateUnpause();
+        gameManager.instance.StateUnpaused();
     }
     /* Build a button for next level, Add that button to the Win Menu in UnityHierarchy (not VS)*/
 
@@ -19,10 +19,10 @@ public class ButtonFunctions : MonoBehaviour
     public void quit()
     {
     #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false; // Stop play mode in the editor
+            UnityEditor.EditorApplication.isPlaying = false; // Stop play mode in the editor
     #else
-        Application.Quit(); // Quit the application
-        gameManager.instance.stateUnpause();
+        Application.Quit(); 
+       
 #endif
     }
 }

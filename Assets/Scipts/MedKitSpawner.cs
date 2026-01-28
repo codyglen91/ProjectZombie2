@@ -17,8 +17,19 @@ public class MedkitSpawner : MonoBehaviour
     int aliveCount = 0;
     int lastSpawnIndex = -1;
 
+    GameObject[] activeAtPoint;
+
     void Start()
     {
+        // Spawn up to maxAlive at the start
+        if (spawnPoints == null || spawnPoints.Length == 0)
+        {
+            Debug.LogWarning("[MedkitSpawner] No spawn points assigned.", this);
+            return;
+        }
+
+        activeAtPoint = new GameObject[spawnPoints.Length];
+
         // Spawn up to maxAlive at the start
         for (int i = 0; i < maxAlive; i++)
         {
@@ -27,10 +38,15 @@ public class MedkitSpawner : MonoBehaviour
     }
 
     // Called by the pickup when the player collects it
-    public void NotifyMedkitPickedUp()
+    public void NotifyMedkitPickedUp(int spawnIndex)
     {
         aliveCount--;
         if (aliveCount < 0) aliveCount = 0;
+
+        if (activeAtPoint != null && spawnIndex >= 0 && spawnIndex < activeAtPoint.Length)
+        {
+            activeAtPoint[spawnIndex] = null;
+        }
 
         // Wait X seconds, then spawn another (at a spawn point)
         Invoke(nameof(SpawnOne), respawnDelay);
@@ -42,31 +58,61 @@ public class MedkitSpawner : MonoBehaviour
         if (spawnPoints == null || spawnPoints.Length == 0) return;
         if (aliveCount >= maxAlive) return;
 
-        int idx = GetRandomSpawnIndexDifferentFromLast();
+        // In case something got destroyed without notifying, clean nulls
+        for (int i = 0; i < activeAtPoint.Length; i++)
+        {
+            if (activeAtPoint[i] == null) continue;
+            // If the object was destroyed, Unity makes it "== null"
+            // so this loop mainly exists for clarity / safety.
+        }
+
+        int idx = GetRandomFreeSpawnIndex();
+        if (idx == -1)
+        {
+            // No free points available
+            return;
+        }
+
         Transform p = spawnPoints[idx];
         if (p == null) return;
 
         GameObject kit = Instantiate(medkitPrefab, p.position, p.rotation);
         aliveCount++;
 
-        // Let the pickup know who its spawner is, so it can notify on pickup
+        activeAtPoint[idx] = kit;
+
+        // Let the pickup know who spawned it + which spawn point index it used
         HealthPickup pickup = kit.GetComponent<HealthPickup>();
         if (pickup != null)
         {
-            pickup.SetSpawner(this);
+            pickup.SetSpawner(this, idx);
+        }
+        else
+        {
+            Debug.LogWarning("[MedkitSpawner] Spawned medkitPrefab has no HealthPickup component.", kit);
         }
     }
 
-    int GetRandomSpawnIndexDifferentFromLast()
+    int GetRandomFreeSpawnIndex()
     {
-        if (spawnPoints.Length == 1)
-            return 0;
+        // Gather all FREE spawn indices
+        int[] free = new int[spawnPoints.Length];
+        int freeCount = 0;
 
-        int idx = Random.Range(0, spawnPoints.Length);
-        if (idx == lastSpawnIndex)
-            idx = (idx + 1) % spawnPoints.Length; // quick �different� pick
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            if (spawnPoints[i] == null) continue;
 
-        lastSpawnIndex = idx;
-        return idx;
+            // Free if nothing currently tracked OR tracked object got destroyed
+            if (activeAtPoint[i] == null)
+            {
+                free[freeCount++] = i;
+            }
+        }
+
+        if (freeCount == 0) return -1;
+
+        int pick = Random.Range(0, freeCount);
+        return free[pick];
     }
 }

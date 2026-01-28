@@ -1,18 +1,17 @@
+using Unity.Hierarchy;
 using UnityEngine;
-using UnityEngine.InputSystem.DualShock;
 
 public class cameraController : MonoBehaviour
 {
     [SerializeField] int sens;
     [SerializeField] int lockVertMin, lockVertMax;
-    [SerializeField] bool invertY; // Rotates player on the Y axis
-    [SerializeField] Transform player;
+    [SerializeField] bool invertY;
+    [SerializeField] Transform Player;
 
-    float camRotX; //rotates camera on X axis for camera
-
-
+    float camRotX;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         Cursor.visible = false;
@@ -22,18 +21,22 @@ public class cameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float mouseX = Input.GetAxisRaw("Mouse X") * sens * Time.deltaTime; //What mouse is doing on X axis
-        float mouseY = Input.GetAxisRaw("Mouse Y") * sens * Time.deltaTime; // What mouse is doing on Y axis
+        float mouseX = Input.GetAxisRaw("Mouse X") * sens * Time.deltaTime;
+        float mouseY = Input.GetAxisRaw("Mouse Y") * sens * Time.deltaTime;
 
         if (invertY)
+        {
             camRotX += mouseY;
+        }
         else
+        {
             camRotX -= mouseY;
+        }
 
         camRotX = Mathf.Clamp(camRotX, lockVertMin, lockVertMax);
 
-        transform.localRotation = Quaternion.Euler(camRotX, 0, 0); //player rotation not world
+        transform.localRotation = Quaternion.Euler(camRotX, 0, 0);
 
-        player.Rotate(Vector3.up * mouseX); 
+        Player.Rotate(Vector3.up * mouseX);
     }
 }

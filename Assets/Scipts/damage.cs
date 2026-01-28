@@ -6,7 +6,7 @@ public class damage : MonoBehaviour
 
     enum damageType { moving, stationary, DOT } // moving: moves forward and deals damage on contact, stationary: stays in place and deals damage on contact, DOT: deals damage over time when in contact
 
-    [SerializeField] damageType type; // Type of damage behavior
+    [SerializeField] damageType type = damageType.moving; // Type of damage behavior
     [SerializeField] Rigidbody rb;
 
     [SerializeField] int damageAmount;
@@ -20,44 +20,50 @@ public class damage : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if(type == damageType.moving)
+        if (rb == null) rb = GetComponent<Rigidbody>();
+
+        if (type == damageType.moving)
         {
-            rb.linearVelocity = transform.forward * speed; // Set the velocity of the Rigidbody to move forward at the specified speed
-            Destroy(gameObject, destroyTime); // Destroy the game object after the specified time
+            if (rb != null)
+                rb.linearVelocity = transform.forward * speed;
+
+            Destroy(gameObject, destroyTime);
         }
     }
 
     // Update is called once per frame
     private void OnTriggerEnter(Collider other)
     {
-        if(other.isTrigger) return; // Ignore trigger colliders
+        // ignore triggers so bullets don’t “hit” trigger volumes
+        if (other.isTrigger) return;
 
-        IDamage damage = GetComponent<IDamage>(); // Try to get the IDamage component from the other object
-        if (damage != null)
-        {
-            damage.takeDamage(damageAmount);
-            if(damage != null && type != damageType.DOT) // If the other object has an IDamage component and the damage type is not DOT
-            {
-                damage.takeDamage(damageAmount);
-            }
-            if(type == damageType.moving)
-            Destroy(gameObject); // Destroy the damage object after dealing damage
+        IDamage target = other.GetComponentInParent<IDamage>();
+        if (target == null) return;
 
-        }
+        target.takeDamage(damageAmount);
+
+        if (hitEffect != null)
+            Instantiate(hitEffect, transform.position, transform.rotation);
+
+        // moving projectiles should die on hit
+        if (type == damageType.moving)
+            Destroy(gameObject);
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.isTrigger) return; // Ignore trigger colliders
+        if (type != damageType.DOT) return;
+        if (other.isTrigger) return;
+        if (isDamaging) return;
 
-        IDamage damage = other.GetComponent<IDamage>(); // Try to get the IDamage component from the other object
-        if (damage != null && type == damageType.DOT && !isDamaging) // If the damage type is DOT and not already damaging
-        {
-            StartCoroutine(damageOther(damage)); // Start the damage over time coroutine
-        }
+        IDamage target = other.GetComponentInParent<IDamage>();
+        if (target == null) return;
+
+        StartCoroutine(damageOther(target));
+
     }
 
-    IEnumerator damageOther (IDamage d) // Coroutine to deal damage over time
+    IEnumerator damageOther(IDamage d) // Coroutine to deal damage over time
     {
         isDamaging = true; // Set the isDamaging flag to true
         d.takeDamage(damageAmount); // Deal damage to the other object

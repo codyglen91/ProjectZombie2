@@ -1,7 +1,6 @@
-using UnityEditor;
 using UnityEngine;
-
-// Connecting the GameManager to ui as GameManager is going to become a prefab and is important.
+using TMPro;
+using UnityEngine.UI;
 public class gameManager : MonoBehaviour
 {
     public static gameManager instance;
@@ -10,31 +9,38 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
+    [SerializeField] TMP_Text gameGoalCountText;
+
+    public GameObject player;
+    public PlayerController playerScript;
+    public Image playerHPBar;
+    public GameObject playerDamageScreen;
 
     public bool isPaused;
-    public GameObject player;
-    public playerController playerScript;
 
-    float timeScaleOriginal;
+    float timeScaleOrig;
+    int gameGoalCount;
 
-    int gameGoalCount; // Number of goals to win the game
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        instance = this; // Singleton pattern
-        timeScaleOriginal = Time.timeScale; // Store the original time scale
+        instance = this;
+
+        timeScaleOrig = Time.timeScale;
 
         player = GameObject.FindWithTag("Player");
-        playerScript = player.GetComponent<playerController>();
+        playerScript = player.GetComponent<PlayerController>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Cancel")) 
+        if (Input.GetButtonDown("Cancel"))
         {
-            if(menuActive == null) 
+            if (menuActive == null)
             {
                 statePause();
                 menuActive = menuPause;
@@ -42,7 +48,7 @@ public class gameManager : MonoBehaviour
             }
             else if (menuActive == menuPause)
             {
-                stateUnpause();
+                StateUnpaused();
             }
         }
     }
@@ -50,37 +56,39 @@ public class gameManager : MonoBehaviour
     public void statePause()
     {
         isPaused = true;
-        Time.timeScale = 0f; // Pause the game
+        Time.timeScale = 0;
         Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None; 
+        Cursor.lockState = CursorLockMode.None;
     }
 
-    public void stateUnpause()
+    public void StateUnpaused()
     {
         isPaused = false;
-        Time.timeScale = timeScaleOriginal; // Resume the game
+        Time.timeScale = timeScaleOrig;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         menuActive.SetActive(false);
         menuActive = null;
     }
 
-    public void youLose() // Calls the lose menu when you die
-    {
-        statePause();
-        menuActive = menuLose;
-        menuActive.SetActive(true);
-    }
-
-    public void updateGameGoal(int amount) // Updates the game goal count and how to win
+    public void updateGameGoal(int amount)
     {
         gameGoalCount += amount;
+        gameGoalCountText.text = gameGoalCount.ToString("F0");
 
-        if(gameGoalCount <= 0)
+        if (gameGoalCount <= 0)
         {
+            // you won!
             statePause();
             menuActive = menuWin;
             menuActive.SetActive(true);
         }
+    }
+
+    public void youLose()
+    {
+        statePause();
+        menuActive = menuLose;
+        menuActive.SetActive(true);
     }
 }
