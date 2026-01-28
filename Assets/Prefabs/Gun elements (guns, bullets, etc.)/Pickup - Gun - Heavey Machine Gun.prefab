@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &253376830469818170
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 100000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+      propertyPath: m_Name
+      value: Pickup - Gun - Heavey Machine Gun
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.56422
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.87607837
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -13.095139
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.2588201
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.9659256
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.000000084238756
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.00000002268159
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -150
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 1485129125342705447}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8658232586254572745}
+  m_SourcePrefab: {fileID: 100100000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+--- !u!1 &253376830469718426 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+  m_PrefabInstance: {fileID: 253376830469818170}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1485129125342705447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253376830469718426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80e9923cd1e0a12419b17b27cf659673, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::pickupGunsNew
+  gun: {fileID: 11400000, guid: eeb2da0f0730f8243882bac9ccc249a0, type: 2}
+--- !u!135 &8658232586254572745
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253376830469718426}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.98373145
+  m_Center: {x: -0.80464894, y: 0.061617568, z: -0.14543132}

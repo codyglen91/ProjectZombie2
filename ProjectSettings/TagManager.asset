@@ -4,6 +4,7 @@
 TagManager:
   serializedVersion: 3
   tags:
+  - wall
   - Enemy
   layers:
   - Default
@@ -15,7 +16,7 @@ TagManager:
   - Player Bullet
   - Enemy
   - Enemy Bullet
-  - 
+  - Gun Cam
   - 
   - 
   - 

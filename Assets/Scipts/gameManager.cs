@@ -29,7 +29,7 @@ public class gameManager : MonoBehaviour
     private int currentLevel = 0;
 
     public GameObject player;
-    public playerController playerScript;
+    public playerControllerNew playerScript;
     public Image playerHPBar;
     public GameObject playerDamageScreen;
 
@@ -111,7 +111,7 @@ public class gameManager : MonoBehaviour
         timeScaleOrig = Time.timeScale;
 
         player = GameObject.FindWithTag("Player");
-        playerScript = player.GetComponent<playerController>();
+        playerScript = player.GetComponent<playerControllerNew>();
 
     }
 

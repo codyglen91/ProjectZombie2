@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fee6a02ea99075499b2b679f5784042, type: 3}
+  m_Name: Gun - Heavy Machinegun
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectileGun
+  gunModel: {fileID: 100000, guid: ffa9e06975e572e4fa0f7a787ff53157, type: 3}
+  bullet: {fileID: 6066196912605754623, guid: ec8321e5bc816f24992e993c7381cc62, type: 3}
+  shootDamage: 1
+  shootDist: 3
+  shootRate: 0.01
+  shootForce: 100
+  upwardForce: 0
+  timeBetweenShooting: 2
+  spread: 1
+  reloadTime: 5
+  timeBetweenShots: 1
+  magazineSize: 100
+  bulletsPerTap: 1
+  allowButtonHold: 0
+  bulletsLeft: 100
+  bulletsShot: 0
+  fpsCam: {fileID: 0}
+  attackPoint: {fileID: 0}
+  ammunitionDisplay: {fileID: 0}
+  allowInvoke: 1
