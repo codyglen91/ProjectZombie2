@@ -45,8 +45,8 @@ public class playerControllerNew : MonoBehaviour , IDamage , IPickup
     [SerializeField] int shootDist;
     //[SerializeField] float shootRate;
 
-//stuff 
-
+    //stuff 
+    int remainingShots;
     int jumpCount;
     int HPOrig;
     int gunListPos;
@@ -295,4 +295,20 @@ public class playerControllerNew : MonoBehaviour , IDamage , IPickup
         gameManager.instance.playerDamageScreen.SetActive(false);
     }
 
+    public void AddAmmo(int amount)
+    {
+        remainingShots += amount;
+
+        if (remainingShots > magazineSize) remainingShots = magazineSize;
+
+        Debug.Log("Player Picked Up Ammo {amount}. Ammo now {remainingShots}/{magazoneSize}");
+    }
+    public void Heal(int amount)
+    {
+        HP += amount;
+        if (HP > HPOrig) HP = HPOrig;
+        Debug.Log($"[Player] Healed {amount}. HP now {HP}");
+
+        updateplayerUI();
+    }
 }
