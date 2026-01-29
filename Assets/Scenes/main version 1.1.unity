@@ -2017,6 +2017,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1420504727027843012, guid: 210b77180df6b014aaf3ddc1c9c5fc3f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1420504727027843012, guid: 210b77180df6b014aaf3ddc1c9c5fc3f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -27.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2749682447651921139, guid: 210b77180df6b014aaf3ddc1c9c5fc3f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -32.6
+      objectReference: {fileID: 0}
     - target: {fileID: 2750044283837147022, guid: 210b77180df6b014aaf3ddc1c9c5fc3f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -7.70849
@@ -2057,9 +2069,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4789896429195839800, guid: 210b77180df6b014aaf3ddc1c9c5fc3f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 43.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4789896429195839800, guid: 210b77180df6b014aaf3ddc1c9c5fc3f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 16.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5805626910978752841, guid: 210b77180df6b014aaf3ddc1c9c5fc3f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -28
+      objectReference: {fileID: 0}
+    - target: {fileID: 5805626910978752841, guid: 210b77180df6b014aaf3ddc1c9c5fc3f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 27.8
+      objectReference: {fileID: 0}
     - target: {fileID: 6909308565013178526, guid: 210b77180df6b014aaf3ddc1c9c5fc3f, type: 3}
       propertyPath: m_Name
       value: AmmoSpawner
+      objectReference: {fileID: 0}
+    - target: {fileID: 7026722591898063345, guid: 210b77180df6b014aaf3ddc1c9c5fc3f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -26.3
       objectReference: {fileID: 0}
     - target: {fileID: 7441010206880557941, guid: 210b77180df6b014aaf3ddc1c9c5fc3f, type: 3}
       propertyPath: ammoPrefab
@@ -10768,6 +10800,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 535510356889377015, guid: f3d762cf6e18ccd42a681a46f023c041, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -29.7
+      objectReference: {fileID: 0}
     - target: {fileID: 535510356889377015, guid: f3d762cf6e18ccd42a681a46f023c041, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1

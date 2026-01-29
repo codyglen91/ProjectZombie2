@@ -51,6 +51,7 @@ public class playerControllerNew : MonoBehaviour , IDamage , IPickup
     int HPOrig;
     int gunListPos;
     int remainingShots;
+    int currentAmmo;
 
     bool allowInvoke = true;
 
@@ -166,13 +167,12 @@ public class playerControllerNew : MonoBehaviour , IDamage , IPickup
 
         
 
-        if (Input.GetKeyDown(KeyCode.R) && gun.bulletsLeft < magazineSize && !reloading)
+        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < magazineSize && !reloading)
             Reload();
 
-        if (readyToShoot && shooting && !reloading && gun.bulletsLeft <= 0)
-            Reload();
+        
 
-        if (readyToShoot && shooting && !reloading && gun.bulletsLeft > 0)
+        if (readyToShoot && shooting && !reloading && currentAmmo > 0)
         {
             bulletsShot = 0;
 
@@ -180,21 +180,26 @@ public class playerControllerNew : MonoBehaviour , IDamage , IPickup
         }
     }
 
-    public void AddAmmo(int amount)
+    public void RefillCurrentMagazine()
     {
-        remainingShots += amount;
+        if (!HasValidGun()) return;
 
-        if (remainingShots > magazineSize) remainingShots = magazineSize;
+        ProjectileGun gun = gunList[gunListPos];
+        currentAmmo = gun.magazineSize;
 
-        Debug.Log("Player Picked Up Ammo {amount}. Ammo now {remainingShots}/{magazoneSize}");
+        Debug.Log($"Refilled {gun.name} to {currentAmmo}/{gun.magazineSize}");
     }
-        
+
 
     private void Shoot()
     {
         if (!HasValidGun()) return;
 
         ProjectileGun gun = gunList[gunListPos];
+
+        if (currentAmmo <= 0)
+            return;
+        
 
         Debug.Log("Shoot() called");
 
@@ -225,7 +230,7 @@ public class playerControllerNew : MonoBehaviour , IDamage , IPickup
         //if (gunList[gunListPos].muzzleFlash != null)
         //   Instantiate(gunList[gunListPos].muzzleFlash, gunList[gunListPos].attackPoint.position, Quaternion.identity);
 
-        gun.bulletsLeft--;
+        currentAmmo--;
         bulletsShot++;
 
         if (allowInvoke)
@@ -234,7 +239,7 @@ public class playerControllerNew : MonoBehaviour , IDamage , IPickup
             allowInvoke = false;
         }
 
-        if (bulletsShot < bulletsPerTap && gun.bulletsLeft > 0)
+        if (bulletsShot < bulletsPerTap && currentAmmo > 0)
             Invoke("Shoot", timeBetweenShots);
 
     }
@@ -255,7 +260,7 @@ public class playerControllerNew : MonoBehaviour , IDamage , IPickup
     {
         if (!HasValidGun()) return;
 
-        gunList[gunListPos].bulletsLeft = gunList[gunListPos].magazineSize;
+        currentAmmo = magazineSize;
         reloading = false;
     }
 
@@ -273,7 +278,7 @@ public class playerControllerNew : MonoBehaviour , IDamage , IPickup
     { 
         if (!HasValidGun()) return;
 
-        ProjectileGun gun = gunList[gunListPos];
+        ProjectileGun gun = gunList[gunListPos]; currentAmmo = gun.magazineSize; 
 
         shootDamage = gun.shootDamage;
         shootDist = gun.shootDist;

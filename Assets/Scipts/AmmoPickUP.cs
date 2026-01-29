@@ -71,7 +71,7 @@ public class AmmoPickUP : MonoBehaviour
         // Add ammo to the player
         if (pc != null)
         {
-            pc.AddAmmo(ammoAmount);
+            pc.RefillCurrentMagazine();
         }
 
 
