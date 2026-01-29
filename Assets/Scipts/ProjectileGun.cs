@@ -30,11 +30,4 @@ public class ProjectileGun : ScriptableObject
 
    public bool allowButtonHold;
 
-   
-
- 
-
-  
-
-   
 }
