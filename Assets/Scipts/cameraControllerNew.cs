@@ -1,21 +1,20 @@
-using Unity.Hierarchy;
 using UnityEngine;
 
-public class cameraController : MonoBehaviour
+public class cameraControllerNew : MonoBehaviour
 {
     [SerializeField] int sens;
     [SerializeField] int lockVertMin, lockVertMax;
     [SerializeField] bool invertY;
-    [SerializeField] Transform Player;
+    [SerializeField] Transform player;
 
     float camRotX;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
 
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked; 
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
@@ -37,6 +36,7 @@ public class cameraController : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(camRotX, 0, 0);
 
-        Player.Rotate(Vector3.up * mouseX);
+        player.Rotate(Vector3.up * mouseX);
     }
 }
+

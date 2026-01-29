@@ -51,9 +51,9 @@ public class HealthPickup : MonoBehaviour
 
         // Match your player script class name:
         // If yours is still "playerController" lowercase, change PlayerController -> playerController
-        playerController pc = other.GetComponent<playerController>();
+        playerControllerNew pc = other.GetComponent<playerControllerNew>();
         if (pc == null)
-            pc = other.GetComponentInParent<playerController>();
+            pc = other.GetComponentInParent<playerControllerNew>();
 
         if (pc == null)
             return;

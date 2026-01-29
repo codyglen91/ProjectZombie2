@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6066196912605754623
+--- !u!1 &8362927536016474687
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,11 +8,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3681057011316039152}
-  - component: {fileID: 7663851407784387064}
-  - component: {fileID: 4195151291271756533}
-  - component: {fileID: 7993555248771100257}
-  - component: {fileID: 6658659476122851177}
+  - component: {fileID: 6185658388337612554}
+  - component: {fileID: 1308759502086703235}
+  - component: {fileID: 6158476401915215627}
+  - component: {fileID: 6243962107031874008}
+  - component: {fileID: 4276014917161792751}
   m_Layer: 6
   m_Name: Bullet
   m_TagString: Untagged
@@ -20,47 +20,47 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3681057011316039152
+--- !u!4 &6185658388337612554
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6066196912605754623}
+  m_GameObject: {fileID: 8362927536016474687}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.5, y: 1.5, z: 5.25}
+  m_LocalPosition: {x: 26, y: 1.25, z: -4.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7663851407784387064
+--- !u!114 &1308759502086703235
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6066196912605754623}
+  m_GameObject: {fileID: 8362927536016474687}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2860f7e84532c474eb7b70da1bc3c98e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::damage
   type: 0
-  rb: {fileID: 6658659476122851177}
-  damageAmount: 10
+  rb: {fileID: 4276014917161792751}
+  damageAmount: 1
   damageRate: 0
   speed: 25
   destroyTime: 3
   hitEffect: {fileID: 0}
---- !u!135 &4195151291271756533
+--- !u!135 &6158476401915215627
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6066196912605754623}
+  m_GameObject: {fileID: 8362927536016474687}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -75,14 +75,14 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!96 &7993555248771100257
+--- !u!96 &6243962107031874008
 TrailRenderer:
   serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6066196912605754623}
+  m_GameObject: {fileID: 8362927536016474687}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -145,8 +145,8 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.98742133, g: 0.0093151415, b: 0.0093151415, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
+      key0: {r: 0.9622642, g: 0.0030257849, b: 0.0030257849, a: 1}
+      key1: {r: 0.9622642, g: 0.0030257849, b: 0.0030257849, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -185,13 +185,13 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
---- !u!54 &6658659476122851177
+--- !u!54 &4276014917161792751
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6066196912605754623}
+  m_GameObject: {fileID: 8362927536016474687}
   serializedVersion: 5
   m_Mass: 1
   m_LinearDamping: 0
@@ -211,4 +211,4 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2

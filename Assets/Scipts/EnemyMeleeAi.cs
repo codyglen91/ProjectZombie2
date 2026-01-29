@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.AI;
 
 
-public class EnemymeleeAI : MonoBehaviour, IDamage
+public class EnemyMeleeAI : MonoBehaviour, IDamage
 {
     GameObject player;
     [SerializeField] NavMeshAgent agent;
@@ -32,7 +32,7 @@ public class EnemymeleeAI : MonoBehaviour, IDamage
             model = GetComponentInChildren<Renderer>(true);
         } else
         {
-            colorOrig = model.material.color;
+            colorOrig = model.sharedMaterial.color;
         }
             agent = GetComponent<NavMeshAgent>();
         player = GameObject.Find("Player");
