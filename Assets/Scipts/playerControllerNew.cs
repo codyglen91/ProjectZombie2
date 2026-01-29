@@ -165,17 +165,24 @@ public class playerControllerNew : MonoBehaviour , IDamage , IPickup
         else
             shooting = Input.GetKeyDown(KeyCode.Mouse0);
 
-        
-
-        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < magazineSize && !reloading)
+        // Manual reload only if: not reloading, mag not full, and we have reserve ammo
+        if (Input.GetKeyDown(KeyCode.R) && !reloading && currentAmmo < magazineSize && remainingShots > 0)
+        {
             Reload();
+            return;
+        }
 
-        
+        // Auto reload only if: trying to shoot, mag empty, and we have reserve ammo
+        if (shooting && !reloading && currentAmmo <= 0 && remainingShots > 0)
+        {
+            Reload();
+            return;
+        }
 
+        // Shoot only if we have bullets in the mag
         if (readyToShoot && shooting && !reloading && currentAmmo > 0)
         {
             bulletsShot = 0;
-
             Shoot();
         }
     }
@@ -185,9 +192,15 @@ public class playerControllerNew : MonoBehaviour , IDamage , IPickup
         if (!HasValidGun()) return;
 
         ProjectileGun gun = gunList[gunListPos];
-        currentAmmo = gun.magazineSize;
 
-        Debug.Log($"Refilled {gun.name} to {currentAmmo}/{gun.magazineSize}");
+        // Fill mag
+        currentAmmo = magazineSize;
+        gun.bulletsLeft = currentAmmo;
+
+        // Fill reserve to max mag size too (simple rule: reserve = another full mag)
+        remainingShots = 0;
+
+        Debug.Log($"Refilled {gun.name} to {currentAmmo}/{magazineSize} + reserve {remainingShots}");
     }
 
 
@@ -231,7 +244,9 @@ public class playerControllerNew : MonoBehaviour , IDamage , IPickup
         //   Instantiate(gunList[gunListPos].muzzleFlash, gunList[gunListPos].attackPoint.position, Quaternion.identity);
 
         currentAmmo--;
+        gun.bulletsLeft = currentAmmo;
         bulletsShot++;
+
 
         if (allowInvoke)
         {
@@ -260,15 +275,41 @@ public class playerControllerNew : MonoBehaviour , IDamage , IPickup
     {
         if (!HasValidGun()) return;
 
-        currentAmmo = magazineSize;
+        ProjectileGun gun = gunList[gunListPos];
+
+        int need = magazineSize - currentAmmo;
+        if (need <= 0)
+        {
+            reloading = false;
+            return;
+        }
+
+        // Take from reserve
+        int take = Mathf.Min(need, remainingShots);
+
+        // If no reserve ammo, can't reload
+        if (take <= 0)
+        {
+            reloading = false;
+            return;
+        }
+
+        currentAmmo += take;
+        remainingShots -= take;
+
+        gun.bulletsLeft = currentAmmo;
+
         reloading = false;
     }
+
 
 
     public void getGunStats(ProjectileGun gun)
     {
         gunList.Add(gun);
         gunListPos = gunList.Count - 1;
+
+       
 
         changeGun();
 
@@ -278,7 +319,10 @@ public class playerControllerNew : MonoBehaviour , IDamage , IPickup
     { 
         if (!HasValidGun()) return;
 
-        ProjectileGun gun = gunList[gunListPos]; currentAmmo = gun.magazineSize; 
+        ProjectileGun gun = gunList[gunListPos];
+        currentAmmo = gun.bulletsLeft;
+        if (currentAmmo > gun.magazineSize) currentAmmo = gun.bulletsLeft;
+        if (currentAmmo < 0) currentAmmo = 0;
 
         shootDamage = gun.shootDamage;
         shootDist = gun.shootDist;
@@ -300,11 +344,13 @@ public class playerControllerNew : MonoBehaviour , IDamage , IPickup
         if (!HasValidGun()) return;
         if (Input.GetAxis("Mouse ScrollWheel") > 0 && gunListPos < gunList.Count - 1)
         {
-                gunListPos++;
+            gunList[gunListPos].bulletsLeft = currentAmmo;
+            gunListPos++;
                 changeGun();
         }
         else if (Input.GetAxis("Mouse ScrollWheel")< 0 && gunListPos> 0) 
             {
+            gunList[gunListPos].bulletsLeft = currentAmmo;
             gunListPos--;
             changeGun();
             }

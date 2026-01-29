@@ -23,7 +23,7 @@ MonoBehaviour:
   spread: 1
   reloadTime: 10
   timeBetweenShots: 1
-  magazineSize: 5
-  bulletsLeft: 5
+  magazineSize: 50
+  bulletsLeft: 42
   bulletsPerTap: 1
   allowButtonHold: 0

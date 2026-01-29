@@ -19,11 +19,11 @@ MonoBehaviour:
   shootRate: 0.01
   shootForce: 100
   upwardForce: 0
-  timeBetweenShooting: 5
+  timeBetweenShooting: 1
   spread: 1
   reloadTime: 5
   timeBetweenShots: 1
   magazineSize: 50
-  bulletsLeft: 50
+  bulletsLeft: 0
   bulletsPerTap: 1
   allowButtonHold: 0
